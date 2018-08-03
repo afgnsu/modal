@@ -1,0 +1,23 @@
+$("ul.errors").html("");
+<% if @post.errors.any? %>
+  <% @post.errors.full_messages.each do |message| %>
+    $("#errors").append($("<li />").html("<%= message.html_safe %>"));
+  <% end %>
+<% else %>
+  $("#post-modal").modal("hide");
+
+  <% if actionName == 'update' %>
+
+    var trRow = $('#posts_table tr[data-id="<%= @post.id %>"]');
+    var trRowPrev = trRow.prev();
+    trRow.remove();
+    if (trRowPrev.data()){
+      trRowPrev.after("<%= j render 'post', post: @post %>");
+    }else{
+      $('#posts_table').prepend("<%= j render 'post', post: @post %>");
+    }
+  <% else %>
+      $('#posts_table').append("<%= j render 'post', post: @post %>")
+  <% end %>
+
+<% end %>
